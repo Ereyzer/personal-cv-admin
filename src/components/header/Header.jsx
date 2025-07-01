@@ -1,7 +1,16 @@
 import { Container } from "react-bootstrap";
 import SvgLogo from "../svgs/SvgLogo";
+import { useEffect, useState } from "react";
 
 function Header() {
+    const [test, setTest] = useState(0);
+
+    console.log(test);
+
+    useEffect(() => {
+        setTest(test + 1);
+    }, [])
+
     return (
         <header className="p-3 bg-dark text-white">
             <Container fluid>
