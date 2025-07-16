@@ -1,36 +1,42 @@
-import {
-    // useEffect,
-    useState
-} from "react";
-import { API_DOMAIN } from "../../config/constants";
-// import axios from "axios";
+import { useEffect, useState } from 'react';
+
+import { apiService } from '../../config';
+import Avatar from './avatar/Avatar';
+import { useUser } from '../context/user/userContext';
+import MyLoader from '../loader/loader';
 
 function Main() {
-    const [data] = useState(0);
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  console.log(useUser());
 
-    // useEffect(() => {
-    //     console.log(API_DOMAIN);
+  const patchData = payload => {
+    setData({ ...payload, ...data });
+  };
 
-    //     (async () => {
-    //         console.log('hello');
-    //         try {
+  useEffect(() => {
+    (async () => {
+      try {
+        const info = await apiService.getAllInfo();
+        setData({ ...info });
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-    //             const response = await axios.get("http://localhost:3000/admin/info")
-    //             console.log(response);
-
-    //         } catch (err) {
-    //             console.log(err);
-
-    //         }
-
-
-    //     })()
-    // }, [])
-    // useEffect(() => () => console.log('unmount'))
-
-    return (
-        <main>{data}</main>
-    )
+  return (
+    <main>
+      {loading && <MyLoader />}
+      {!loading && <Avatar imgUrl={data.avatar} setImgUrl={patchData} />}
+      {!loading && error && <p>error</p>}
+    </main>
+  );
 }
 
 export default Main;

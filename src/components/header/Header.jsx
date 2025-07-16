@@ -16,7 +16,7 @@ function Header() {
                 </div>
             </Container>
         </header>
-    )
+    );
 }
 
 export default Header;

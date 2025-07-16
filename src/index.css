@@ -1,6 +1,10 @@
+:root {
+  --main-bg-color: rgb(2, 1, 26);
+  --main-text-color: rgb(238, 238, 241);
+}
 
 body {
-  background-color: rgb(2, 1, 26);
+  background-color: var(--main-bg-color);
 }
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

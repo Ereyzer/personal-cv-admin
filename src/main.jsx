@@ -1,14 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'modern-normalize'
-import './index.css'
-import App from './components/App'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'modern-normalize';
+import './index.css';
+
+import App from './components/App';
+import ContextProviders from './components/context/ContextProviders';
 
 createRoot(document.getElementById('root')).render(
-  // <StrictMode>
-  <App />
-  // </StrictMode>
-  ,
-)
+  <StrictMode>
+    <ContextProviders>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ContextProviders>
+  </StrictMode>
+);
