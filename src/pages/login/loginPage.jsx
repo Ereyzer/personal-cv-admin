@@ -2,28 +2,28 @@ import clsx from 'clsx';
 import css from './login.module.css';
 
 import { useUser } from '../../components/context/user/userContext';
-import { apiService, localStrageService } from '../../config';
-import { useNavigate } from 'react-router-dom';
+import { apiService, localStorageService } from '../../config';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function LoginPage() {
-  const { logIn } = useUser();
+  const { isLoggedIn, logIn } = useUser();
   const navigate = useNavigate();
   const year = new Date(Date.now()).getFullYear();
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const form = e.currentTarget;
-
-    const { email, password } = form.elements;
+    const { email, password } = e.currentTarget.elements;
 
     const token = await apiService.login(email.value, password.value);
-    localStrageService.setAccsessToken(token);
+    localStorageService.setAccessToken(token);
     logIn();
 
     navigate('/', { replace: true });
   };
 
-  return (
+  return isLoggedIn ? (
+    <Navigate to={'/'} replace />
+  ) : (
     <div className={css['form-page']}>
       <form className={css['form-signin']} onSubmit={handleSubmit}>
         <h1 className={clsx(css['color-h1'], 'h3 mb-3 fw-normal')}>Please sign in</h1>

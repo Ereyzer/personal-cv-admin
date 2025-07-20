@@ -6,4 +6,4 @@ export const constants = {
 };
 
 export const apiService = new services.ApiService(API_DOMAIN);
-export const localStrageService = new services.LocalStorageService();
+export const localStorageService = new services.LocalStorageService();

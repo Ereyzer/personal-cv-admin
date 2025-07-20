@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { localStorageService } from '../config';
 
 export class ApiService {
   #BASE_URL;
@@ -17,8 +18,10 @@ export class ApiService {
   login = async (email, password) => {
     const url = this.#BASE_URL + '/auth/login';
 
-    const response = await axios.post(url, { email, password });
+    const response = await axios.post(url, { email, password }, { withCredentials: true });
+
     const { accessToken } = response.data.data;
+    this.#bearer = `Bearer ${accessToken}`;
     return accessToken;
   };
 
@@ -30,9 +33,37 @@ export class ApiService {
       await axios.get(url, { headers: { Authorization: this.#bearer } });
       return true;
     } catch {
-      // TODO: refresh or ofline
-      console.log('offline');
+      return await this.refreshToken();
+    }
+  };
+
+  refreshToken = async () => {
+    const url = this.#BASE_URL + '/auth/refresh';
+
+    try {
+      const response = await axios.post(url, {}, { withCredentials: true });
+      const { accessToken } = response.body.body;
+      localStorageService.setAccessToken(accessToken);
+      this.#bearer = `Bearer ${accessToken}`;
+      return true;
+    } catch {
       return false;
     }
+  };
+  logout = () => {
+    const url = this.#BASE_URL + '/auth/logout';
+    const headers = {
+      Authorization: this.#bearer,
+    };
+
+    axios.post(
+      url,
+      {},
+      {
+        headers,
+        withCredentials: true,
+      }
+    );
+    this.#bearer = null;
   };
 }

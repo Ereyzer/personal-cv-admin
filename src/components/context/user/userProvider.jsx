@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { UserContext } from './userContext';
-import { apiService, localStrageService } from '../../../config';
+import { apiService, localStorageService } from '../../../config';
 import MyLoader from '../../loader/loader';
 
 export const UserProvider = ({ children }) => {
@@ -12,13 +12,15 @@ export const UserProvider = ({ children }) => {
   };
 
   const logOut = () => {
+    apiService.logout();
+    localStorageService.rmAccessToken();
     setIsLoggedIn(false);
   };
 
   useEffect(() => {
-    const items = localStrageService.read();
+    const items = localStorageService.read();
     if (items.includes('accessToken')) {
-      const token = localStrageService.getAccessToken();
+      const token = localStorageService.getAccessToken();
       apiService
         .checkIsOnline(token)
         .then(res => {
@@ -29,6 +31,8 @@ export const UserProvider = ({ children }) => {
         .finally(() => {
           setLoad(true);
         });
+    } else {
+      setLoad(true);
     }
   }, []);
 

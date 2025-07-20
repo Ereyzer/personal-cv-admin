@@ -11,11 +11,11 @@ export class LocalStorageService {
     return localList;
   };
 
-  //   write = ([key, value]) => {
-  //     localStorage.setItem(key, JSON.stringify(value));
-  //   };
-
-  setAccsessToken = t => {
+  rmAccessToken = () => {
+    localStorage.removeItem('accessToken');
+    this.#accessToken = null;
+  };
+  setAccessToken = t => {
     this.#accessToken = t;
     localStorage.setItem('accessToken', JSON.stringify(t));
   };
