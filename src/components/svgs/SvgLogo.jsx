@@ -31,7 +31,7 @@ function SvgLogo(props) {
             <line x1="122" y1="145" x2="134" y2="145" strokeWidth="3" />
             Sorry, your browser does not support inline SVG.
         </svg>
-    )
+    );
 }
 
 export default SvgLogo;
