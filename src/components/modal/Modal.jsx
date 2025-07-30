@@ -3,11 +3,13 @@ import { Modal, Button, Form } from 'react-bootstrap';
 
 import css from './modal.module.css';
 import { PhotoMovementHandlerClass } from './photoMovementHandlerClass';
+import { apiService } from '../../config';
 
 const minPhotoWidth = 202;
 
-function AvatarModal({ onClose }) {
+function AvatarModal({ onClose, setImgUrl }) {
   const [photo, setPhoto] = useState(null);
+  const [photoEl, setPhotoEl] = useState(null);
   const [imageStyle, setImageStyle] = useState({
     top: 0,
     left: 0,
@@ -25,8 +27,7 @@ function AvatarModal({ onClose }) {
       imageStyle.top,
       updateImageStyle,
       photoRef,
-      canvas,
-      setPhoto
+      canvas
     )
   );
 
@@ -38,6 +39,7 @@ function AvatarModal({ onClose }) {
     const elem = fileInput.current;
     elem.addEventListener('change', () => {
       if (elem.files.length === 1) {
+        setPhotoEl(elem.files[0]);
         setPhoto(URL.createObjectURL(elem.files[0]));
 
         setTimeout(() => {
@@ -50,7 +52,6 @@ function AvatarModal({ onClose }) {
 
             movementEventHendlerClass.setPhotoX(0);
             movementEventHendlerClass.setPhotoY(0);
-            console.log([photoRef.current]);
 
             setNotSlider(minPhotoWidth);
           }
@@ -59,30 +60,19 @@ function AvatarModal({ onClose }) {
     });
   }, [movementEventHendlerClass]);
 
-  // useEffect(() => {
-  //   console.log('original width: ', [photoRef.current]);
-  //   setTimeout(() => {
-  //     if (photoRef.current.naturalWidth > 0) {
-  //       setNotSlider(minPhotoWidth);
-  //     }
-  //   });
-  // }, [photo]);
-  const onSave = () => {
-    console.log('save');
-    movementEventHendlerClass.cropPhoto();
+  const onSave = async () => {
+    const fullImg = await apiService.updateFullAvatar(photoEl);
+    const cutImg = await movementEventHendlerClass.cropPhoto();
+    setImgUrl({
+      avatar: {
+        full: fullImg.data.url,
+        cut: cutImg.data.url,
+      },
+    });
+    onClose();
   };
   const onPhotoClick = e => {
     e.preventDefault();
-    console.log([photoRef.current]);
-    // console.log('height: ', 100 - (e.target.clientHeight - 200));
-    // console.log('width: ', e.target.clientWidth);
-    // console.log('offH: ', e.target.offsetHeight);
-    // console.log('offW: ', e.target.offsetWidth);
-    // console.log('top: ', photoRef.current.offsetTop);
-    // console.log('left: ', e.target.offsetLeft);
-    // console.log('offset: ', 100 - Number.parseInt((photoRef.current.offsetWidth - 200) / 2));
-    console.log([e.target]);
-    console.log(e.clientX);
 
     movementEventHendlerClass.setPrevX(e.clientX);
     movementEventHendlerClass.setPrevY(e.clientY);
@@ -90,7 +80,6 @@ function AvatarModal({ onClose }) {
     const mouseUpHandler = () => {
       document.removeEventListener('mousemove', movementEventHendlerClass.movementEvent);
       updateImageStyle({ cursor: 'pointer' });
-      console.log('mouse Up');
 
       movementEventHendlerClass.setPhotoY();
       movementEventHendlerClass.setPhotoX();

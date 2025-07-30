@@ -1,9 +1,10 @@
 import css from './avatar.module.css';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AvatarModal from '../../modal/Modal';
 
-function AvatarSection({ imgUrl }) {
+function AvatarSection({ imgUrl, setImgUrl }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const imgRef = useRef();
   const openModal = () => {
     setIsOpenModal(true);
   };
@@ -13,12 +14,12 @@ function AvatarSection({ imgUrl }) {
   return (
     <section>
       <div className={css['hero-img']}>
-        <img src={imgUrl} />
+        <img src={imgUrl} ref={imgRef} />
       </div>
       <button type="button" onClick={openModal}>
         {!imgUrl ? 'choose avatar' : 'change avatar'}
       </button>
-      {isOpenModal && <AvatarModal title="New avatar" onClose={closeModal} />}
+      {isOpenModal && <AvatarModal title="New avatar" onClose={closeModal} setImgUrl={setImgUrl} />}
     </section>
   );
 }

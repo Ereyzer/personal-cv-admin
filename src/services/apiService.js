@@ -6,6 +6,8 @@ export class ApiService {
   #bearer;
   constructor(baseUrl) {
     this.#BASE_URL = baseUrl;
+    this.updateFullAvatar = this.autorizationHendler(this.updateFullAvatar);
+    this.updateCutAvatar = this.autorizationHendler(this.updateCutAvatar);
   }
 
   getAllInfo = async () => {
@@ -41,7 +43,6 @@ export class ApiService {
     const url = this.#BASE_URL + '/auth/refresh';
     try {
       const response = await axios.post(url, {}, { withCredentials: true });
-      console.log(response);
 
       const { accessToken } = response.data.data;
       localStorageService.setAccessToken(accessToken);
@@ -68,6 +69,52 @@ export class ApiService {
     );
     this.#bearer = null;
   };
+  autorizationHendler = func => {
+    return async (...args) => {
+      try {
+        // func.aplly(this, args);
+        console.log('auth try');
 
+        return await func(...args);
+      } catch (error) {
+        console.log(' I handle it');
+
+        if (await this.refreshToken()) {
+          return await func(...args);
+        } else {
+          console.log(error);
+        }
+      }
+    };
+  };
   // download avatar
+  updateFullAvatar = async avatar => {
+    const url = this.#BASE_URL + '/admin/files/avatar';
+    const headers = {
+      Authorization: this.#bearer,
+    };
+    const form = new FormData();
+    form.append('my_field', 'avatar');
+    form.append('avatar', avatar);
+
+    const response = await axios.post(url, form, {
+      headers,
+    });
+    return response.data;
+  };
+  updateCutAvatar = async avatar => {
+    const url = this.#BASE_URL + '/admin/files/cutavatar';
+    const headers = {
+      Authorization: this.#bearer,
+    };
+    const form = new FormData();
+    // form.append('my_field', 'avatar');
+    // form.append('avatar', avatar);
+    form.append('avatar', avatar, 'cut_avatar.jpg');
+
+    const response = await axios.post(url, form, {
+      headers,
+    });
+    return response.data;
+  };
 }

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { apiService } from '../../config';
-import { useUser } from '../context/user/userContext';
 import MyLoader from '../loader/loader';
 import AvatarSection from './avatar/Avatar';
 
@@ -9,10 +8,9 @@ function Main() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  console.log(useUser());
 
   const patchData = payload => {
-    setData({ ...payload, ...data });
+    setData({ ...data, ...payload });
   };
 
   useEffect(() => {
@@ -33,7 +31,7 @@ function Main() {
   return (
     <main>
       {loading && <MyLoader />}
-      {!loading && <AvatarSection imgUrl={data.avatar} setImgUrl={patchData} />}
+      {!loading && <AvatarSection imgUrl={data.avatar.cut} setImgUrl={patchData} />}
       {!loading && error && <p>error</p>}
     </main>
   );

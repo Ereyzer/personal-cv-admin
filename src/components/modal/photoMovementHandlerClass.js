@@ -1,5 +1,7 @@
 // import { myDebounce } from '../../utils/debounce';
 
+import { apiService } from '../../config';
+
 // const changeMargins = myDebounce(function changeMargins(startChanger) {
 //   startChanger();
 // }, 300);
@@ -23,17 +25,7 @@ export class PhotoMovementHandlerClass {
   #circleDiameter;
   #windowWidth;
   #canvas;
-  #setPhoto;
-  constructor(
-    x,
-    y,
-    updateImageStyle,
-    photoRef,
-    canvas,
-    setPhoto,
-    windowWidth = 400,
-    circleDiameter = 200
-  ) {
+  constructor(x, y, updateImageStyle, photoRef, canvas, windowWidth = 400, circleDiameter = 200) {
     this.#photoX = x;
     this.#photoY = y;
     this.#updateImageStyle = updateImageStyle;
@@ -42,7 +34,6 @@ export class PhotoMovementHandlerClass {
     this.#windowWidth = windowWidth;
     this.#circleDiameter = circleDiameter;
     this.#canvas = canvas;
-    this.#setPhoto = setPhoto;
   }
 
   getPrevX = () => this.#prevX;
@@ -62,26 +53,16 @@ export class PhotoMovementHandlerClass {
     }
   };
   setPhotoX = x => {
-    console.log('test x');
     if (x !== undefined) {
       this.#photoX = 0;
       this.#tmpPhotoX = 0;
     } else {
       this.#photoX = this.#tmpPhotoX || this.#photoX;
     }
-
-    console.log(this.#photoX);
   };
   setTopLefrStart = () => {
-    this.#topStart =
-      100 - Number.parseInt((this.#photo.current.clientHeight - this.#circleDiameter) / 2);
+    this.#topStart = Number.parseInt((this.#windowWidth - this.#photo.current.clientHeight) / 2);
     this.#leftStart = Number.parseInt((this.#windowWidth - this.#photo.current.clientWidth) / 2);
-    // 100 - Number.parseInt((this.#photo.current.clientWidth - this.#circleDiameter) / 2);
-    // console.log('this.#leftStart: ', this.#leftStart);
-    // console.log('alternative: ', (windowWidth - Number.parseInt(this.#photo.current.clientWidth)) / 2);
-
-    // this.#photoY = this.#topStart;
-    // this.#photoX = this.#leftStart;
 
     this.#topMax = 99 - this.#topStart;
     this.#bottomMax =
@@ -118,12 +99,10 @@ export class PhotoMovementHandlerClass {
     const { clientX, clientY } = e;
     const changeY = clientY - this.#prevY;
     const changeX = clientX - this.#prevX;
-    // if (changeX === 0 && changeY === 0) return;
+
     const top = changeY === 0 ? 0 : this.#topChange(changeY);
 
     const left = changeX === 0 ? 0 : this.#leftChange(changeX);
-    // console.log('this.#photoX: ', this.#photoX);
-    // console.log('top: ', top);
 
     this.#updateImageStyle({ top, left });
     this.#tmpPhotoY = top;
@@ -168,17 +147,9 @@ export class PhotoMovementHandlerClass {
     };
   };
 
-  cropPhoto = () => {
-    console.log('canvas test');
+  cropPhoto = async () => {
     const ctx = this.#canvas.current.getContext('2d');
-    console.log(this.#photo.current.width);
-    console.log(this.#photo.current.naturalWidth);
 
-    // console.log(this.#photo.current.height);
-    // console.log(this.#photoX);
-    // console.log(this.#leftStart);
-
-    // console.log('xstart: ', 99 - this.#leftStart - this.#photoX);
     const widthCorrelation = this.#photo.current.naturalWidth / this.#photo.current.width;
     const heightCorrelation = this.#photo.current.naturalHeight / this.#photo.current.height;
     const cropWidth = widthCorrelation * 200;
@@ -198,15 +169,16 @@ export class PhotoMovementHandlerClass {
       this.#circleDiameter,
       this.#circleDiameter
     );
-    // console.log(ctx);
-    console.log('crp x y: ');
+    const blobPromise = new Promise((resolve, reject) => {
+      this.#canvas.current.toBlob(blob => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error('Failed to create Blob from canvas.'));
+        }
+      }, 'image/jpg');
+    });
 
-    console.log(cropX);
-    console.log(cropY);
-    console.log(this.#windowWidth);
-
-    this.#setPhoto(null);
-
-    console.log('canvas test end');
+    return await apiService.updateCutAvatar(await blobPromise);
   };
 }
