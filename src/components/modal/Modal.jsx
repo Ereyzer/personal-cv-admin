@@ -36,26 +36,23 @@ function AvatarModal({ onClose, setImgUrl }) {
   }
 
   useEffect(() => {
-    const elem = fileInput.current;
-    elem.addEventListener('change', () => {
+    const element = fileInput.current;
+    element.addEventListener('change', e => {
+      const elem = e.target;
       if (elem.files.length === 1) {
         setPhotoEl(elem.files[0]);
         setPhoto(URL.createObjectURL(elem.files[0]));
 
-        setTimeout(() => {
-          if (photoRef.current.naturalWidth > 0) {
-            updateImageStyle({
-              top: 0,
-              left: 0,
-              width: minPhotoWidth,
-            });
-
-            movementEventHendlerClass.setPhotoX(0);
-            movementEventHendlerClass.setPhotoY(0);
-
-            setNotSlider(minPhotoWidth);
-          }
+        updateImageStyle({
+          top: 0,
+          left: 0,
+          width: minPhotoWidth,
         });
+
+        movementEventHendlerClass.setPhotoX(0);
+        movementEventHendlerClass.setPhotoY(0);
+
+        setNotSlider(minPhotoWidth);
       }
     });
   }, [movementEventHendlerClass]);
