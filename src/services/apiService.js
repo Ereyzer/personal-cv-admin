@@ -78,11 +78,17 @@ export class ApiService {
         return await func(...args);
       } catch (error) {
         console.log(' I handle it');
-
-        if (await this.refreshToken()) {
-          return await func(...args);
+        if (error.code === 401) {
+          if (await this.refreshToken()) {
+            return await func(...args);
+          } else {
+            console.log(error);
+            throw new Error(error.message);
+          }
         } else {
+          console.log('not auth error');
           console.log(error);
+          throw new Error(error.message);
         }
       }
     };
