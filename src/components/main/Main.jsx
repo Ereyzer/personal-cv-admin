@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { apiService } from '../../config';
-import Avatar from './avatar/Avatar';
 import { useUser } from '../context/user/userContext';
 import MyLoader from '../loader/loader';
+import AvatarSection from './avatar/Avatar';
 
 function Main() {
   const [data, setData] = useState({});
@@ -33,7 +33,7 @@ function Main() {
   return (
     <main>
       {loading && <MyLoader />}
-      {!loading && <Avatar imgUrl={data.avatar} setImgUrl={patchData} />}
+      {!loading && <AvatarSection imgUrl={data.avatar} setImgUrl={patchData} />}
       {!loading && error && <p>error</p>}
     </main>
   );

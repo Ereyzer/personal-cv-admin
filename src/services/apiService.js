@@ -39,12 +39,14 @@ export class ApiService {
 
   refreshToken = async () => {
     const url = this.#BASE_URL + '/auth/refresh';
-
     try {
       const response = await axios.post(url, {}, { withCredentials: true });
-      const { accessToken } = response.body.body;
+      console.log(response);
+
+      const { accessToken } = response.data.data;
       localStorageService.setAccessToken(accessToken);
       this.#bearer = `Bearer ${accessToken}`;
+
       return true;
     } catch {
       return false;
@@ -66,4 +68,6 @@ export class ApiService {
     );
     this.#bearer = null;
   };
+
+  // download avatar
 }

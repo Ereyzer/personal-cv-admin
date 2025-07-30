@@ -6,6 +6,21 @@
 body {
   background-color: var(--main-bg-color);
 }
+
+a,
+img,
+ul,
+ol,
+li {
+  margin: 0;
+  padding: 0;
+  border: none;
+  text-decoration: none;
+}
+img {
+  display: block;
+  box-sizing: border-box;
+}
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
