@@ -78,7 +78,7 @@ export class ApiService {
         return await func(...args);
       } catch (error) {
         console.log(' I handle it');
-        if (error.code === 401) {
+        if (error.status === 401) {
           if (await this.refreshToken()) {
             return await func(...args);
           } else {
