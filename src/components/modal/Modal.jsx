@@ -4,6 +4,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import css from './modal.module.css';
 import { PhotoMovementHandlerClass } from './photoMovementHandlerClass';
 import { apiService } from '../../config';
+import { notifications } from '../../utils/notifications';
 
 const minPhotoWidth = 202;
 
@@ -16,7 +17,8 @@ function AvatarModal({ onClose, setImgUrl }) {
     width: minPhotoWidth,
     cursor: 'pointer',
   });
-  const [notSlider, setNotSlider] = useState(0);
+  const [minSliderValue, setMinSliderValue] = useState(0);
+  const [maxSliderValue, setMaxSliderValue] = useState(0);
 
   const fileInput = useRef();
   const photoRef = useRef();
@@ -48,24 +50,53 @@ function AvatarModal({ onClose, setImgUrl }) {
           left: 0,
           width: minPhotoWidth,
         });
-
-        movementEventHendlerClass.setPhotoX(0);
-        movementEventHendlerClass.setPhotoY(0);
-
-        setNotSlider(minPhotoWidth);
       }
     });
   }, [movementEventHendlerClass]);
 
+  const handleImgOnLoad = () => {
+    movementEventHendlerClass.setTopLefrStart();
+    movementEventHendlerClass.setPhotoX(0);
+    movementEventHendlerClass.setPhotoY(0);
+    setMinSliderValue(minPhotoWidth);
+    setMaxSliderValue(photoRef.current.naturalWidth);
+  };
+
   const onSave = async () => {
-    const fullImg = await apiService.updateFullAvatar(photoEl);
-    const cutImg = await movementEventHendlerClass.cropPhoto();
-    setImgUrl({
-      avatar: {
-        full: fullImg.data.url,
-        cut: cutImg.data.url,
-      },
-    });
+    // const fullImg = await apiService.updateFullAvatar(photoEl);
+    // const cutImg = await movementEventHendlerClass.cropPhoto();
+    // setImgUrl({
+    //   avatar: {
+    //     full: fullImg.data.url,
+    //     cut: cutImg.data.url,
+    //   },
+    // });
+    // onClose();
+
+    new Promise((onResolve, onReject) => {
+      const fullImg = apiService.updateFullAvatar(photoEl);
+      const cutImg = movementEventHendlerClass.cropPhoto();
+      notifications.info('Saving avstar', 'we updating your avatar');
+      Promise.all([fullImg, cutImg])
+        .then(([full, cut]) => {
+          setImgUrl({
+            avatar: {
+              full: full.data.url,
+              cut: cut.data.url,
+            },
+          });
+        })
+        .catch(e => {
+          onReject(e.message);
+        });
+      onResolve();
+    })
+      .then(() => {
+        notifications.success('Saving avstar', 'Avatar was updated!');
+      })
+      .catch(message => {
+        notifications.error('Saving avstar', message);
+      });
     onClose();
   };
   const onPhotoClick = e => {
@@ -89,7 +120,7 @@ function AvatarModal({ onClose, setImgUrl }) {
   };
 
   return (
-    <Modal show={true} onHide={onClose}>
+    <Modal show={true} onHide={onClose} animation={true}>
       <Modal.Header closeButton>
         <Modal.Title>Choose new avatar</Modal.Title>
       </Modal.Header>
@@ -99,17 +130,25 @@ function AvatarModal({ onClose, setImgUrl }) {
             <div className={css['hero-img']}>
               <canvas id="canvas" className={css['canvas-position']} ref={canvas}></canvas>
               <div className={css.overlay}></div>
-              <img src={photo} onMouseDown={onPhotoClick} style={imageStyle} ref={photoRef} />
+              {!!photo && (
+                <img
+                  src={photo}
+                  onMouseDown={onPhotoClick}
+                  style={imageStyle}
+                  ref={photoRef}
+                  onLoad={handleImgOnLoad}
+                />
+              )}
             </div>
           </div>
 
-          {!!notSlider && (
+          {!!minSliderValue && !!maxSliderValue && (
             <Form.Range
               min={minPhotoWidth}
-              max={photoRef.current.naturalWidth}
-              value={notSlider}
+              max={maxSliderValue}
+              value={minSliderValue}
               step={2}
-              onChange={movementEventHendlerClass.scaleEven(setNotSlider)}
+              onChange={movementEventHendlerClass.scaleEven(setMinSliderValue)}
             />
           )}
           <Form.Control type="file" ref={fileInput} />
