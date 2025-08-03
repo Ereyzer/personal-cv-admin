@@ -57,7 +57,6 @@ function ChangeAvatarModalBody({ setImgUrl, onSave }) {
       }
     });
   }, [movementEventHendlerClass]);
-  useEffect(() => {}, [photoEl]);
 
   useMemo(() => {
     onSave(null, true, saving);
