@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiService } from '../../config';
 import MyLoader from '../loader/loader';
 import AvatarSection from './avatar/Avatar';
+import Intro from './intro/Intro';
 
 function Main() {
   const [data, setData] = useState({});
@@ -31,7 +32,12 @@ function Main() {
   return (
     <main>
       {loading && <MyLoader />}
-      {!loading && <AvatarSection imgUrl={data.avatar.cut} setImgUrl={patchData} />}
+      {!loading && (
+        <>
+          <AvatarSection imgUrl={data.avatar.cut} setImgUrl={patchData} />
+          <Intro patchData={patchData} data={data} />
+        </>
+      )}
       {!loading && error && <p>error</p>}
     </main>
   );

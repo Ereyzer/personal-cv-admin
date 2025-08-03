@@ -8,6 +8,7 @@ export class ApiService {
     this.#BASE_URL = baseUrl;
     this.updateFullAvatar = this.autorizationHendler(this.updateFullAvatar);
     this.updateCutAvatar = this.autorizationHendler(this.updateCutAvatar);
+    this.updateIntro = this.autorizationHendler(this.updateIntro);
   }
 
   getAllInfo = async () => {
@@ -114,13 +115,23 @@ export class ApiService {
       Authorization: this.#bearer,
     };
     const form = new FormData();
-    // form.append('my_field', 'avatar');
-    // form.append('avatar', avatar);
     form.append('avatar', avatar, 'cut_avatar.jpg');
 
     const response = await axios.post(url, form, {
       headers,
     });
+    return response.data;
+  };
+
+  updateIntro = async (value, lang) => {
+    const url = this.#BASE_URL + `/admin/info/${lang}/intro`;
+
+    const headers = {
+      Authorization: this.#bearer,
+    };
+
+    const response = await axios.patch(url, { value }, { headers });
+
     return response.data;
   };
 }

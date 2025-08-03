@@ -1,10 +1,11 @@
-import { Button } from 'react-bootstrap';
+import LangugeList from '../lenguages/Languages';
+import IntroItem from './IntroItem';
 
-function Intro() {
+function Intro({ data, patchData }) {
   return (
     <section id="intro">
-      <p></p>
-      <Button>Change intro</Button>
+      <h2>Intro</h2>
+      <LangugeList obj={data.intro} TextComponent={IntroItem} setIntro={patchData} />
     </section>
   );
 }

@@ -22,7 +22,7 @@ function AvatarSection({ imgUrl, setImgUrl }) {
         {!imgUrl ? 'choose avatar' : 'change avatar'}
       </Button>
       {isOpenModal && (
-        <AvatarModal title="Choose new avatar" onClose={closeModal} setImgUrl={setImgUrl}>
+        <AvatarModal title="Choose new avatar" onClose={closeModal}>
           <ChangeAvatarModalBody setImgUrl={setImgUrl} />
         </AvatarModal>
       )}
