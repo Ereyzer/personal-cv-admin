@@ -1,131 +1,174 @@
-import { useEffect, useRef, useState } from 'react';
-import { Modal, Button, Form, Col, Image, Row } from 'react-bootstrap';
-import clsx from 'clsx';
+// // import { useEffect, useRef, useState } from 'react';
+// import { Modal, Button, Form } from 'react-bootstrap';
 
-import css from './modal.module.css';
+// // import css from './modal.module.css';
+// import { PhotoMovementHandlerClass } from './photoMovementHandlerClass';
+// // import { apiService } from '../../config';
+// // import { notifications } from '../../utils/notifications';
 
-class MoveClickleHandle {
-  #prevX;
-  #prevY;
-  #updateMoveCircle;
-  #circleX;
-  #circleY;
-  #tmpCircleY;
-  #tmpCircleX;
-  constructor(x, y, updateMoveCircle, circleY, circleX) {
-    this.#prevX = x;
-    this.#prevY = y;
-    this.#updateMoveCircle = updateMoveCircle;
-    this.#circleX = circleX;
-    this.#circleY = circleY;
-  }
+// // const minPhotoWidth = 202;
 
-  getPrevX = () => this.#prevX;
-  getPrevY = () => this.#prevY;
-  setPrevX = x => {
-    this.#prevX = x;
-  };
-  setPrevY = y => {
-    this.#prevY = y;
-  };
-  setCircleY = () => {
-    this.#circleY = this.#tmpCircleY;
-  };
-  setCircleX = () => {
-    this.#circleX = this.#tmpCircleX;
-  };
+// function AvatarModal({ onClose, setImgUrl, children }) {
+//   // const [photo, setPhoto] = useState(null);
+//   // const [photoEl, setPhotoEl] = useState(null);
+//   // const [imageStyle, setImageStyle] = useState({
+//   //   top: 0,
+//   //   left: 0,
+//   //   width: minPhotoWidth,
+//   //   cursor: 'pointer',
+//   // });
+//   // const [minSliderValue, setMinSliderValue] = useState(0);
+//   // const [maxSliderValue, setMaxSliderValue] = useState(0);
 
-  movementEvent = e => {
-    const { clientX, clientY } = e;
+//   // const fileInput = useRef();
+//   // const photoRef = useRef();
+//   // const canvas = useRef();
+//   // const { current: movementEventHendlerClass } = useRef(
+//   //   new PhotoMovementHandlerClass(
+//   //     imageStyle.left,
+//   //     imageStyle.top,
+//   //     updateImageStyle,
+//   //     photoRef,
+//   //     canvas
+//   //   )
+//   // );
 
-    const top = this.#circleY + (clientY - this.#prevY);
-    const left = this.#circleX + (clientX - this.#prevX);
+//   // function updateImageStyle(newObj) {
+//   //   setImageStyle(m => ({ ...m, ...newObj }));
+//   // }
 
-    this.#updateMoveCircle({ top, left });
-    this.#tmpCircleY = top;
-    this.#tmpCircleX = left;
-  };
-}
+//   // useEffect(() => {
+//   //   const element = fileInput.current;
+//   //   element.addEventListener('change', e => {
+//   //     const elem = e.target;
+//   //     if (elem.files.length === 1) {
+//   //       setPhotoEl(elem.files[0]);
+//   //       setPhoto(URL.createObjectURL(elem.files[0]));
 
-function AvatarModal({ onClose }) {
-  const [photo, setPhoto] = useState(null);
-  const [moveCircle, setMoveCircle] = useState({
-    display: 'none',
-    top: -250,
-    left: 250,
-    cursor: 'pointer',
-  });
+//   //       updateImageStyle({
+//   //         top: 0,
+//   //         left: 0,
+//   //         width: minPhotoWidth,
+//   //       });
+//   //     }
+//   //   });
+//   // }, [movementEventHendlerClass]);
 
-  const fileInput = useRef();
-  const circleRef = useRef();
-  const { current: movementEventHendlerClass } = useRef(
-    new MoveClickleHandle(0, 0, updateMoveCircle, moveCircle.top, moveCircle.left)
-  );
-  function updateMoveCircle(newObj) {
-    setMoveCircle(m => ({ ...m, ...newObj }));
-  }
+//   // const handleImgOnLoad = () => {
+//   //   movementEventHendlerClass.setTopLefrStart();
+//   //   movementEventHendlerClass.setPhotoX(0);
+//   //   movementEventHendlerClass.setPhotoY(0);
+//   //   setMinSliderValue(minPhotoWidth);
+//   //   setMaxSliderValue(photoRef.current.naturalWidth);
+//   // };
+//   const onSave = ((isApdated = false) => {
+//     // let isApdated = false;
+//     console.log(isApdated);
+//     return async (e, apdate, func) => {
+//       if (!e && !!apdate) {
+//         isApdated = apdate;
+//       }
+//       if (!isApdated) {
+//         onClose();
+//         return;
+//       } else {
+//         func();
+//         onClose();
+//       }
+//     };
+//   })(false);
+//   // const onSave = async () => {
+//   // new Promise((onResolve, onReject) => {
+//   //   const fullImg = apiService.updateFullAvatar(photoEl);
+//   //   const cutImg = movementEventHendlerClass.cropPhoto();
+//   //   notifications.info('Saving avstar', 'we updating your avatar');
+//   //   Promise.all([fullImg, cutImg])
+//   //     .then(([full, cut]) => {
+//   //       setImgUrl({
+//   //         avatar: {
+//   //           full: full.data.url,
+//   //           cut: cut.data.url,
+//   //         },
+//   //       });
+//   //     })
+//   //     .catch(e => {
+//   //       onReject(e.message);
+//   //     });
+//   //   onResolve();
+//   // })
+//   //   .then(() => {
+//   //     notifications.success('Saving avstar', 'Avatar was updated!');
+//   //   })
+//   //   .catch(message => {
+//   //     notifications.error('Saving avstar', message);
+//   //   });
+//   // onClose();
+//   // };
+//   // const onPhotoClick = e => {
+//   //   e.preventDefault();
 
-  const avatarBox = clsx(css.overlay);
+//   //   movementEventHendlerClass.setPrevX(e.clientX);
+//   //   movementEventHendlerClass.setPrevY(e.clientY);
 
-  useEffect(() => {
-    console.log('component did mount');
-    console.log(fileInput);
-    const elem = fileInput.current;
-    elem.addEventListener('cancel', () => {
-      console.log('Cancelled.');
-    });
-    elem.addEventListener('change', () => {
-      if (elem.files.length === 1) {
-        console.log('File selected: ', elem.files[0]);
-        setPhoto(URL.createObjectURL(elem.files[0]));
-        updateMoveCircle({ display: 'block' });
+//   //   const mouseUpHandler = () => {
+//   //     document.removeEventListener('mousemove', movementEventHendlerClass.movementEvent);
+//   //     updateImageStyle({ cursor: 'pointer' });
+
+//   //     movementEventHendlerClass.setPhotoY();
+//   //     movementEventHendlerClass.setPhotoX();
+//   //     document.removeEventListener('mouseup', mouseUpHandler);
+//   //   };
+//   //   updateImageStyle({ cursor: 'alias' });
+
+//   //   document.addEventListener('mousemove', movementEventHendlerClass.movementEvent);
+//   //   document.addEventListener('mouseup', mouseUpHandler);
+//   // };
+
+//   return (
+//     <Modal show={true} onHide={onClose} animation={true}>
+//       <Modal.Header closeButton>
+//         <Modal.Title>Choose new avatar</Modal.Title>
+//       </Modal.Header>
+//       <Modal.Body>{children}</Modal.Body>
+//       <Modal.Footer>
+//         <Button variant="secondary" onClick={onClose}>
+//           Close
+//         </Button>
+//         <Button variant="primary" onClick={onSave}>
+//           Save Changes
+//         </Button>
+//       </Modal.Footer>
+//     </Modal>
+//   );
+// }
+
+// export default AvatarModal;
+
+import { Modal, Button } from 'react-bootstrap';
+
+function MyModal({ onClose, children }) {
+  const onSave = ((isApdated = false) => {
+    // let isApdated = false;
+    console.log(isApdated);
+    return async (e, apdate, func) => {
+      if (!e && !!apdate) {
+        isApdated = apdate;
       }
-    });
-  }, []);
-  const onSave = () => {
-    console.log('save');
-  };
-  const onCircleClick = e => {
-    movementEventHendlerClass.setPrevX(e.clientX);
-    movementEventHendlerClass.setPrevY(e.clientY);
-    console.log([circleRef.current.previousElementSibling]);
-    //
-    // offsetHeight 500
-    // offsetLeft 79
-    // offsetTop : 16
-    // offsetWidth : 339
-
-    const mouseUpHandler = e => {
-      console.log(e.type);
-      document.removeEventListener('mousemove', movementEventHendlerClass.movementEvent);
-      updateMoveCircle({ cursor: 'pointer' });
-      movementEventHendlerClass.setCircleY();
-      movementEventHendlerClass.setCircleX();
-      document.removeEventListener('mouseup', mouseUpHandler);
+      if (!isApdated) {
+        onClose();
+        return;
+      } else {
+        func();
+        onClose();
+      }
     };
-    updateMoveCircle({ cursor: 'alias' });
-    if (e.target === circleRef.current) {
-      document.addEventListener('mousemove', movementEventHendlerClass.movementEvent);
-      document.addEventListener('mouseup', mouseUpHandler);
-    }
-  };
-
+  })(false);
   return (
-    <Modal show={true} onHide={onClose}>
+    <Modal show={true} onHide={onClose} animation={true}>
       <Modal.Header closeButton>
         <Modal.Title>Choose new avatar</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form.Group controlId="formFile" className="mb-3">
-          <div className={css['lable-position']}>
-            <div className={css['hero-img']} onMouseDown={onCircleClick}>
-              <img src={photo} />
-              <div className={avatarBox} style={moveCircle} ref={circleRef}></div>
-            </div>
-          </div>
-          <Form.Control type="file" ref={fileInput} />
-        </Form.Group>
-      </Modal.Body>
+      <Modal.Body>{children}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
           Close
@@ -138,4 +181,4 @@ function AvatarModal({ onClose }) {
   );
 }
 
-export default AvatarModal;
+export default MyModal;

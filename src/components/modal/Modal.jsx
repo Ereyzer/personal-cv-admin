@@ -1,159 +1,53 @@
-import { useEffect, useRef, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import React from 'react';
+import { Modal, Button } from 'react-bootstrap';
 
-import css from './modal.module.css';
-import { PhotoMovementHandlerClass } from './photoMovementHandlerClass';
-import { apiService } from '../../config';
-import { notifications } from '../../utils/notifications';
-
-const minPhotoWidth = 202;
-
-function AvatarModal({ onClose, setImgUrl }) {
-  const [photo, setPhoto] = useState(null);
-  const [photoEl, setPhotoEl] = useState(null);
-  const [imageStyle, setImageStyle] = useState({
-    top: 0,
-    left: 0,
-    width: minPhotoWidth,
-    cursor: 'pointer',
-  });
-  const [minSliderValue, setMinSliderValue] = useState(0);
-  const [maxSliderValue, setMaxSliderValue] = useState(0);
-
-  const fileInput = useRef();
-  const photoRef = useRef();
-  const canvas = useRef();
-  const { current: movementEventHendlerClass } = useRef(
-    new PhotoMovementHandlerClass(
-      imageStyle.left,
-      imageStyle.top,
-      updateImageStyle,
-      photoRef,
-      canvas
-    )
-  );
-
-  function updateImageStyle(newObj) {
-    setImageStyle(m => ({ ...m, ...newObj }));
-  }
-
-  useEffect(() => {
-    const element = fileInput.current;
-    element.addEventListener('change', e => {
-      const elem = e.target;
-      if (elem.files.length === 1) {
-        setPhotoEl(elem.files[0]);
-        setPhoto(URL.createObjectURL(elem.files[0]));
-
-        updateImageStyle({
-          top: 0,
-          left: 0,
-          width: minPhotoWidth,
-        });
+function MyModal({ title, onClose, children }) {
+  const onSave = ((isApdated = false, myFunc = null) => {
+    return async (e, apdate, func) => {
+      if (!e && !!apdate) {
+        isApdated = apdate;
+        myFunc = func;
+        return;
       }
-    });
-  }, [movementEventHendlerClass]);
-
-  const handleImgOnLoad = () => {
-    movementEventHendlerClass.setTopLefrStart();
-    movementEventHendlerClass.setPhotoX(0);
-    movementEventHendlerClass.setPhotoY(0);
-    setMinSliderValue(minPhotoWidth);
-    setMaxSliderValue(photoRef.current.naturalWidth);
-  };
-
-  const onSave = async () => {
-    // const fullImg = await apiService.updateFullAvatar(photoEl);
-    // const cutImg = await movementEventHendlerClass.cropPhoto();
-    // setImgUrl({
-    //   avatar: {
-    //     full: fullImg.data.url,
-    //     cut: cutImg.data.url,
-    //   },
-    // });
-    // onClose();
-
-    new Promise((onResolve, onReject) => {
-      const fullImg = apiService.updateFullAvatar(photoEl);
-      const cutImg = movementEventHendlerClass.cropPhoto();
-      notifications.info('Saving avstar', 'we updating your avatar');
-      Promise.all([fullImg, cutImg])
-        .then(([full, cut]) => {
-          setImgUrl({
-            avatar: {
-              full: full.data.url,
-              cut: cut.data.url,
-            },
-          });
-        })
-        .catch(e => {
-          onReject(e.message);
-        });
-      onResolve();
-    })
-      .then(() => {
-        notifications.success('Saving avstar', 'Avatar was updated!');
-      })
-      .catch(message => {
-        notifications.error('Saving avstar', message);
-      });
-    onClose();
-  };
-  const onPhotoClick = e => {
-    e.preventDefault();
-
-    movementEventHendlerClass.setPrevX(e.clientX);
-    movementEventHendlerClass.setPrevY(e.clientY);
-
-    const mouseUpHandler = () => {
-      document.removeEventListener('mousemove', movementEventHendlerClass.movementEvent);
-      updateImageStyle({ cursor: 'pointer' });
-
-      movementEventHendlerClass.setPhotoY();
-      movementEventHendlerClass.setPhotoX();
-      document.removeEventListener('mouseup', mouseUpHandler);
+      if (!isApdated) {
+        onClose();
+        return;
+      } else {
+        if (!(await myFunc())) {
+          return;
+        }
+        onClose();
+      }
     };
-    updateImageStyle({ cursor: 'alias' });
-
-    document.addEventListener('mousemove', movementEventHendlerClass.movementEvent);
-    document.addEventListener('mouseup', mouseUpHandler);
-  };
+  })();
+  if (React.Children.count(children) === 0) {
+    return (
+      <Modal show={true} onHide={onClose} animation={true}>
+        <Modal.Header closeButton>
+          <Modal.Title>{title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>here is no content</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={onSave}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+  const childWithProps = React.Children.map(children, child =>
+    React.cloneElement(child, { onSave })
+  );
 
   return (
     <Modal show={true} onHide={onClose} animation={true}>
       <Modal.Header closeButton>
-        <Modal.Title>Choose new avatar</Modal.Title>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form.Group controlId="formFile" className="mb-3">
-          <div className={css['lable-position']}>
-            <div className={css['hero-img']}>
-              <canvas id="canvas" className={css['canvas-position']} ref={canvas}></canvas>
-              <div className={css.overlay}></div>
-              {!!photo && (
-                <img
-                  src={photo}
-                  onMouseDown={onPhotoClick}
-                  style={imageStyle}
-                  ref={photoRef}
-                  onLoad={handleImgOnLoad}
-                />
-              )}
-            </div>
-          </div>
-
-          {!!minSliderValue && !!maxSliderValue && (
-            <Form.Range
-              min={minPhotoWidth}
-              max={maxSliderValue}
-              value={minSliderValue}
-              step={2}
-              onChange={movementEventHendlerClass.scaleEven(setMinSliderValue)}
-            />
-          )}
-          <Form.Control type="file" ref={fileInput} />
-        </Form.Group>
-      </Modal.Body>
+      <Modal.Body>{childWithProps}</Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
           Close
@@ -166,4 +60,4 @@ function AvatarModal({ onClose, setImgUrl }) {
   );
 }
 
-export default AvatarModal;
+export default MyModal;
