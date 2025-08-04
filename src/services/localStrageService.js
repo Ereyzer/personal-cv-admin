@@ -1,6 +1,8 @@
 export class LocalStorageService {
-  #accessToken;
-  constructor() {}
+  #accessToken = null;
+  constructor() {
+    this.read();
+  }
 
   read = () => {
     const localList = [];

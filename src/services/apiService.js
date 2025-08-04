@@ -1,13 +1,16 @@
 import axios from 'axios';
 import { localStorageService } from '../config';
+import { notifications } from '../utils/notifications';
 
 export class ApiService {
   #BASE_URL;
   #bearer;
+  #loguotContext;
   constructor(baseUrl) {
     this.#BASE_URL = baseUrl;
     this.updateFullAvatar = this.autorizationHendler(this.updateFullAvatar);
     this.updateCutAvatar = this.autorizationHendler(this.updateCutAvatar);
+    this.updateIntro = this.autorizationHendler(this.updateIntro);
   }
 
   getAllInfo = async () => {
@@ -34,7 +37,9 @@ export class ApiService {
     try {
       await axios.get(url, { headers: { Authorization: this.#bearer } });
       return true;
-    } catch {
+    } catch (err) {
+      console.log('catch error: ', err);
+
       return await this.refreshToken();
     }
   };
@@ -72,23 +77,24 @@ export class ApiService {
   autorizationHendler = func => {
     return async (...args) => {
       try {
-        // func.aplly(this, args);
-        console.log('auth try');
-
         return await func(...args);
       } catch (error) {
-        console.log(' I handle it');
         if (error.status === 401) {
           if (await this.refreshToken()) {
-            return await func(...args);
+            try {
+              return await func(...args);
+            } catch (error) {
+              console.log('not auth error');
+              console.log(error);
+              notifications.error('some error', 'smesing went wrong');
+            }
           } else {
-            console.log(error);
-            throw new Error(error.message);
+            this.#loguotContext();
           }
         } else {
           console.log('not auth error');
           console.log(error);
-          throw new Error(error.message);
+          notifications.error('some error', 'smesing went wrong');
         }
       }
     };
@@ -114,13 +120,27 @@ export class ApiService {
       Authorization: this.#bearer,
     };
     const form = new FormData();
-    // form.append('my_field', 'avatar');
-    // form.append('avatar', avatar);
     form.append('avatar', avatar, 'cut_avatar.jpg');
 
     const response = await axios.post(url, form, {
       headers,
     });
     return response.data;
+  };
+
+  updateIntro = async (value, lang) => {
+    const url = this.#BASE_URL + `/admin/info/${lang}/intro`;
+
+    const headers = {
+      Authorization: this.#bearer,
+    };
+
+    const response = await axios.patch(url, { value }, { headers });
+
+    return response.data;
+  };
+
+  setLogoutContext = func => {
+    this.#loguotContext = func;
   };
 }

@@ -1,6 +1,6 @@
 // import { myDebounce } from '../../utils/debounce';
 
-import { apiService } from '../../config';
+import { apiService } from '../../../config';
 
 // const changeMargins = myDebounce(function changeMargins(startChanger) {
 //   startChanger();
