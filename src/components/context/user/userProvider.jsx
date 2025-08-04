@@ -9,6 +9,10 @@ export const UserProvider = ({ children }) => {
 
   const logIn = () => {
     setIsLoggedIn(true);
+    apiService.setLogoutContext(() => {
+      localStorageService.rmAccessToken();
+      setIsLoggedIn(false);
+    });
   };
 
   const logOut = () => {
@@ -18,9 +22,10 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const items = localStorageService.read();
-    if (items.includes('accessToken')) {
-      const token = localStorageService.getAccessToken();
+    const token = localStorageService.getAccessToken();
+    if (!token) {
+      setLoad(true);
+    } else {
       apiService
         .checkIsOnline(token)
         .then(res => {
@@ -31,8 +36,6 @@ export const UserProvider = ({ children }) => {
         .finally(() => {
           setLoad(true);
         });
-    } else {
-      setLoad(true);
     }
   }, []);
 

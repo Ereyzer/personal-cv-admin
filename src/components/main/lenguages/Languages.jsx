@@ -1,5 +1,5 @@
 import { ListGroup } from 'react-bootstrap';
-import { langs } from '../../../config/constants';
+import { constants } from '../../../config';
 
 function LangugeList({ obj, TextComponent, ...props }) {
   return <ListGroup>{buildLangList({ obj, TextComponent }, props)}</ListGroup>;
@@ -13,7 +13,12 @@ function buildLangList(obj, props) {
       {Object.keys(obj.obj).map(key => {
         return (
           <ListGroup.Item style={{ backgroundColor: 'inherit', color: 'inherit' }} key={key}>
-            <obj.TextComponent title={langs[key]} text={obj.obj[key]} {...props} leng={key} />
+            <obj.TextComponent
+              title={constants.languages[key]}
+              text={obj.obj[key]}
+              {...props}
+              leng={key}
+            />
           </ListGroup.Item>
         );
       })}

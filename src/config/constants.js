@@ -2,7 +2,7 @@
 export const API_DOMAIN = import.meta.env.VITE_API_DOMAIN || 'http://localhost:3000';
 // export const API_DOMAIN = 'http://localhost:3000';
 
-export const langs = {
+export const languages = {
   uk: 'Ukranian',
   en: 'English',
 };

@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { localStorageService } from '../config';
+import { notifications } from '../utils/notifications';
 
 export class ApiService {
   #BASE_URL;
   #bearer;
+  #loguotContext;
   constructor(baseUrl) {
     this.#BASE_URL = baseUrl;
     this.updateFullAvatar = this.autorizationHendler(this.updateFullAvatar);
@@ -35,7 +37,9 @@ export class ApiService {
     try {
       await axios.get(url, { headers: { Authorization: this.#bearer } });
       return true;
-    } catch {
+    } catch (err) {
+      console.log('catch error: ', err);
+
       return await this.refreshToken();
     }
   };
@@ -73,23 +77,24 @@ export class ApiService {
   autorizationHendler = func => {
     return async (...args) => {
       try {
-        // func.aplly(this, args);
-        console.log('auth try');
-
         return await func(...args);
       } catch (error) {
-        console.log(' I handle it');
         if (error.status === 401) {
           if (await this.refreshToken()) {
-            return await func(...args);
+            try {
+              return await func(...args);
+            } catch (error) {
+              console.log('not auth error');
+              console.log(error);
+              notifications.error('some error', 'smesing went wrong');
+            }
           } else {
-            console.log(error);
-            throw new Error(error.message);
+            this.#loguotContext();
           }
         } else {
           console.log('not auth error');
           console.log(error);
-          throw new Error(error.message);
+          notifications.error('some error', 'smesing went wrong');
         }
       }
     };
@@ -133,5 +138,9 @@ export class ApiService {
     const response = await axios.patch(url, { value }, { headers });
 
     return response.data;
+  };
+
+  setLogoutContext = func => {
+    this.#loguotContext = func;
   };
 }
