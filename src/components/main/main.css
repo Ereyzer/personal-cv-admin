@@ -1,0 +1,7 @@
+.main-section + .main-section {
+  margin-top: 20px;
+}
+
+.main-section:first-child {
+  margin-top: 10px;
+}

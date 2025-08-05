@@ -11,6 +11,9 @@ export class ApiService {
     this.updateFullAvatar = this.autorizationHendler(this.updateFullAvatar);
     this.updateCutAvatar = this.autorizationHendler(this.updateCutAvatar);
     this.updateIntro = this.autorizationHendler(this.updateIntro);
+    this.updateAbout = this.autorizationHendler(this.updateAbout);
+    this.updatSocialLinks = this.autorizationHendler(this.updatSocialLinks);
+    this.removeSocialLink = this.autorizationHendler(this.removeSocialLink);
   }
 
   setLogoutContext = func => {
@@ -145,5 +148,21 @@ export class ApiService {
 
     const response = await axios.patch(url, { value }, { headers: this.getHeaders() });
     return response.data;
+  };
+
+  updatSocialLinks = async (link, value) => {
+    const url = this.#BASE_URL + `/admin/info/${link}`;
+
+    const response = await axios.patch(url, { value }, { headers: this.getHeaders() });
+    return response.data;
+  };
+  removeSocialLink = async link => {
+    const url = this.#BASE_URL + `/admin/info/${link}`;
+
+    const response = await axios.delete(url, { headers: this.getHeaders() });
+    if (response.status === 204) {
+      return true;
+    }
+    return response;
   };
 }

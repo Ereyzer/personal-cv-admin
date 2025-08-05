@@ -13,8 +13,9 @@ function AvatarSection({ imgUrl, setImgUrl }) {
   const closeModal = () => {
     setIsOpenModal(false);
   };
+
   return (
-    <section id="avatar">
+    <section id="avatar" className="main-section">
       <div className={css['hero-img']}>
         <img src={imgUrl} ref={imgRef} />
       </div>
