@@ -1,11 +1,10 @@
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import MyModal from '../../modal/Modal';
-import { useState } from 'react';
-import ChangeIntro from './ChangeIntroIntro';
+import ChangeAboutItem from './ChangeAboutItem';
 
-function IntroItem({ title, text, patchData, leng }) {
+function AboutItem({ title, text, patchData, leng }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  //   console.log(patchData);
 
   const openModal = () => {
     setIsOpenModal(true);
@@ -20,11 +19,11 @@ function IntroItem({ title, text, patchData, leng }) {
       <Button onClick={openModal}>Change intro</Button>
       {isOpenModal && (
         <MyModal title={`Update ${title} version of intro`} onClose={closeModal}>
-          <ChangeIntro setIntro={patchData} text={text} len={leng} />
+          <ChangeAboutItem setAbout={patchData} text={text} len={leng} />
         </MyModal>
       )}
     </>
   );
 }
 
-export default IntroItem;
+export default AboutItem;
