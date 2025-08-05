@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { apiService } from '../../config';
 import MyLoader from '../loader/loader';
 import AvatarSection from './avatar/Avatar';
-import Intro from './intro/Intro';
+import MultiLangugeItem from './lenguages/MultiLanguageItem';
+import IntroItem from './intro/IntroItem';
+import AboutItem from './about/AboutItem';
 
 function Main() {
   const [data, setData] = useState({});
@@ -35,7 +37,8 @@ function Main() {
       {!loading && (
         <>
           <AvatarSection imgUrl={data.avatar.cut} setImgUrl={patchData} />
-          <Intro patchData={patchData} data={data} />
+          <MultiLangugeItem patchData={patchData} data={data} title={'Intro'} Item={IntroItem} />
+          <MultiLangugeItem patchData={patchData} data={data} title={'About'} Item={AboutItem} />
         </>
       )}
       {!loading && error && <p>error</p>}
