@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-function MyModal({ title, onClose, children }) {
+function MyModal({ title, onClose, children, size }) {
   const onSave = ((isApdated = false, myFunc = null) => {
     return async (e, apdate, func) => {
       if (!e && !!apdate) {
@@ -43,7 +43,7 @@ function MyModal({ title, onClose, children }) {
   );
 
   return (
-    <Modal show={true} onHide={onClose} animation={true}>
+    <Modal show={true} onHide={onClose} animation={true} size={size}>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>

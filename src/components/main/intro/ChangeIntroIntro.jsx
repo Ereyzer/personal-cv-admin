@@ -1,5 +1,5 @@
-import { useMemo, useRef } from 'react';
-import { Form } from 'react-bootstrap';
+import { useMemo, useRef, useState } from 'react';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import { apiService } from '../../../config';
 import { notifications } from '../../../utils/notifications';
 
@@ -10,7 +10,13 @@ function ChangeIntro({ setIntro, onSave, text, len }) {
     onSave(null, true, saving);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textareaRef]);
-
+  const [textValue, setTextValue] = useState(text);
+  const handleChange = e => {
+    setTextValue(e.target.value);
+  };
+  const clearText = () => {
+    setTextValue('');
+  };
   async function saving() {
     if (textareaRef.current.value.length < 5 || textareaRef.current.value.length > 100) {
       notifications.error(noteTitle, 'text must be min length 5 and max length 100');
@@ -33,15 +39,21 @@ function ChangeIntro({ setIntro, onSave, text, len }) {
   }
   return (
     <>
-      <Form.Group>
+      <InputGroup>
         <Form.Control
-          type="textarea"
-          placeholder={text}
+          as="textarea"
+          placeholder="Say some intro about you"
+          value={textValue}
           minLength={5}
-          maxLength={100}
+          maxLength={250}
           ref={textareaRef}
+          onChange={handleChange}
+          rows={6}
         />
-      </Form.Group>
+        <Button variant="outline-secondary" onClick={clearText}>
+          Clear
+        </Button>
+      </InputGroup>
     </>
   );
 }
