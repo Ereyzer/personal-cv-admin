@@ -1,12 +1,19 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { notifications } from '../../../utils/notifications';
 import { apiService } from '../../../config';
-import { Form } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 
 const noteTitle = 'Saving About';
 
 function ChangeAboutItem({ setAbout, onSave, text, len }) {
   const textareaRef = useRef();
+  const [textValue, setTextValue] = useState(text);
+  const handleChange = e => {
+    setTextValue(e.target.value);
+  };
+  const clearText = () => {
+    setTextValue('');
+  };
 
   useMemo(() => {
     onSave(null, true, saving);
@@ -14,7 +21,7 @@ function ChangeAboutItem({ setAbout, onSave, text, len }) {
   }, [textareaRef]);
 
   async function saving() {
-    if (textareaRef.current.value.length < 5 || textareaRef.current.value.length > 100) {
+    if (textareaRef.current.value.length < 5 || textareaRef.current.value.length > 1000) {
       notifications.error(noteTitle, 'text must be min length 5 and max length 1000');
       return false;
     }
@@ -36,15 +43,21 @@ function ChangeAboutItem({ setAbout, onSave, text, len }) {
 
   return (
     <>
-      <Form.Group>
+      <InputGroup>
         <Form.Control
-          type="textarea"
-          placeholder={text}
+          as="textarea"
+          placeholder="Say somesing about you"
           minLength={5}
           maxLength={1000}
+          value={textValue}
           ref={textareaRef}
+          onChange={handleChange}
+          rows={14}
         />
-      </Form.Group>
+        <Button variant="outline-secondary" onClick={clearText}>
+          Clear
+        </Button>
+      </InputGroup>
     </>
   );
 }
