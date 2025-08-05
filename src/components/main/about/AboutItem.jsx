@@ -18,7 +18,7 @@ function AboutItem({ title, text, patchData, leng }) {
       <p>{text}</p>
       <Button onClick={openModal}>Change intro</Button>
       {isOpenModal && (
-        <MyModal title={`Update ${title} version of intro`} onClose={closeModal}>
+        <MyModal title={`Update ${title} version of intro`} onClose={closeModal} size={'lg'}>
           <ChangeAboutItem setAbout={patchData} text={text} len={leng} />
         </MyModal>
       )}
