@@ -12,7 +12,7 @@ function buildLangList(obj, props) {
     <>
       {Object.keys(obj.obj).map(key => {
         return (
-          <ListGroup.Item style={{ backgroundColor: 'inherit', color: 'inherit' }} key={key}>
+          <ListGroup.Item className="inherit-colors" key={key}>
             <obj.TextComponent
               title={constants.languages[key]}
               text={obj.obj[key]}
