@@ -3,8 +3,12 @@ import { Modal, Button } from 'react-bootstrap';
 
 function MyModal({ title, onClose, children, size }) {
   const onSave = ((isApdated = false, myFunc = null) => {
+    console.log('onsave');
+
     return async (e, apdate, func) => {
       if (!e && !!apdate) {
+        console.log('set');
+
         isApdated = apdate;
         myFunc = func;
         return;
