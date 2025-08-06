@@ -168,7 +168,7 @@ export class ApiService {
     return response;
   };
   getHardSkills = async () => {
-    const url = this.#BASE_URL + '/admin/hardSkills?perPage=12&page=1';
+    const url = this.#BASE_URL + '/admin/hardSkills?perPage=100&page=1';
 
     const response = await axios.get(url);
 
