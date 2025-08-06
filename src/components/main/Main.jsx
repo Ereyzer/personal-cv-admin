@@ -9,6 +9,7 @@ import AboutItem from './about/AboutItem';
 import LinksSection from './linksSection/LincsSection';
 
 import './main.css';
+import HardSkillsList from './hardSkils/HardSkilsList';
 function Main() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,7 @@ function Main() {
           <LinksSection data={data} patchData={patchData} />
           <MultiLangugeItem patchData={patchData} data={data} title={'Intro'} Item={IntroItem} />
           <MultiLangugeItem patchData={patchData} data={data} title={'About'} Item={AboutItem} />
+          <HardSkillsList />
         </>
       )}
       {!loading && error && <p>error</p>}

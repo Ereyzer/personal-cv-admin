@@ -1,0 +1,16 @@
+.image {
+  width: 100px;
+}
+
+.image img {
+  max-width: 100%;
+}
+
+.cardm {
+  width: 100px !important;
+}
+.cardm img {
+  max-width: 100%;
+
+  /* width: 100px; */
+}

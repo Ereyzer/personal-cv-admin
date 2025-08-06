@@ -14,6 +14,8 @@ export class ApiService {
     this.updateAbout = this.autorizationHendler(this.updateAbout);
     this.updatSocialLinks = this.autorizationHendler(this.updatSocialLinks);
     this.removeSocialLink = this.autorizationHendler(this.removeSocialLink);
+    this.addHardSkill = this.autorizationHendler(this.addHardSkill);
+    this.removeHardSkill = this.autorizationHendler(this.removeHardSkill);
   }
 
   setLogoutContext = func => {
@@ -164,5 +166,27 @@ export class ApiService {
       return true;
     }
     return response;
+  };
+  getHardSkills = async () => {
+    const url = this.#BASE_URL + '/admin/hardSkills?perPage=100&page=1';
+
+    const response = await axios.get(url);
+
+    return response.data;
+  };
+
+  addHardSkill = async Skill => {
+    const url = this.#BASE_URL + '/admin/hardSkills';
+
+    const response = await axios.post(url, Skill, { headers: this.getHeaders() });
+    return response.data;
+  };
+
+  removeHardSkill = async id => {
+    const url = this.#BASE_URL + `/admin/hardSkills/${id}`;
+
+    const response = await axios.delete(url, { headers: this.getHeaders() });
+
+    console.log(response);
   };
 }
