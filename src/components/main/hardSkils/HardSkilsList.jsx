@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, CardGroup, ListGroup, Row } from 'react-bootstrap';
+import { Button, Card, ListGroup, Row } from 'react-bootstrap';
 import { apiService } from '../../../config';
 
 import clsx from 'clsx';
@@ -26,7 +26,6 @@ function HardSkillsList() {
     (async () => {
       const res = await apiService.getHardSkills();
       if (!res?.data) return [];
-      console.log(res);
 
       setList(res.data);
     })();
@@ -40,7 +39,9 @@ function HardSkillsList() {
   };
 
   const onDelete = async id => {
-    apiService.removeHardSkill(id);
+    apiService.removeHardSkill(id).then(() => {
+      setList(l => l.filter(skill => skill._id !== id && skill));
+    });
   };
   return (
     <section id="hardSkills" className={clsx('main-section', 'inherit-colors')}>
