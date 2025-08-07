@@ -21,6 +21,13 @@ li {
 img {
   display: block;
   box-sizing: border-box;
+  text-decoration: none;
+}
+.inherit-colors {
+  background-color: inherit;
+  color: inherit;
+  fill: inherit;
+  stroke: inherit;
 }
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

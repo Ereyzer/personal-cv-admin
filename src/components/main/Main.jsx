@@ -6,7 +6,11 @@ import AvatarSection from './avatar/Avatar';
 import MultiLangugeItem from './lenguages/MultiLanguageItem';
 import IntroItem from './intro/IntroItem';
 import AboutItem from './about/AboutItem';
+import LinksSection from './linksSection/LincsSection';
 
+import './main.css';
+import HardSkillsList from './hardSkils/HardSkilsList';
+import SoftSkillsList from './softSkills/SoftSkillsList';
 function Main() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -37,8 +41,11 @@ function Main() {
       {!loading && (
         <>
           <AvatarSection imgUrl={data.avatar.cut} setImgUrl={patchData} />
+          <LinksSection data={data} patchData={patchData} />
           <MultiLangugeItem patchData={patchData} data={data} title={'Intro'} Item={IntroItem} />
           <MultiLangugeItem patchData={patchData} data={data} title={'About'} Item={AboutItem} />
+          <HardSkillsList />
+          <SoftSkillsList />
         </>
       )}
       {!loading && error && <p>error</p>}

@@ -11,6 +11,13 @@ export class ApiService {
     this.updateFullAvatar = this.autorizationHendler(this.updateFullAvatar);
     this.updateCutAvatar = this.autorizationHendler(this.updateCutAvatar);
     this.updateIntro = this.autorizationHendler(this.updateIntro);
+    this.updateAbout = this.autorizationHendler(this.updateAbout);
+    this.updatSocialLinks = this.autorizationHendler(this.updatSocialLinks);
+    this.removeSocialLink = this.autorizationHendler(this.removeSocialLink);
+    this.addHardSkill = this.autorizationHendler(this.addHardSkill);
+    this.removeHardSkill = this.autorizationHendler(this.removeHardSkill);
+    this.addSoftSkill = this.autorizationHendler(this.addSoftSkill);
+    this.removeSoftSkill = this.autorizationHendler(this.removeSoftSkill);
   }
 
   setLogoutContext = func => {
@@ -145,5 +152,83 @@ export class ApiService {
 
     const response = await axios.patch(url, { value }, { headers: this.getHeaders() });
     return response.data;
+  };
+
+  updatSocialLinks = async (link, value) => {
+    const url = this.#BASE_URL + `/admin/info/${link}`;
+
+    const response = await axios.patch(url, { value }, { headers: this.getHeaders() });
+    return response.data;
+  };
+  removeSocialLink = async link => {
+    const url = this.#BASE_URL + `/admin/info/${link}`;
+
+    const response = await axios.delete(url, { headers: this.getHeaders() });
+    if (response.status === 204) {
+      return true;
+    }
+    return response;
+  };
+  getHardSkills = async () => {
+    const url = this.#BASE_URL + '/admin/hardSkills?perPage=100&page=1';
+
+    const response = await axios.get(url);
+
+    return response.data;
+  };
+
+  addHardSkill = async Skill => {
+    const url = this.#BASE_URL + '/admin/hardSkills';
+
+    const response = await axios.post(url, Skill, { headers: this.getHeaders() });
+    return response.data;
+  };
+
+  removeHardSkill = async id => {
+    const url = this.#BASE_URL + `/admin/hardSkills/${id}`;
+
+    const response = await axios.delete(url, { headers: this.getHeaders() });
+    if (response.status !== 204) {
+      throw new Error('did not delete');
+    }
+    return response;
+  };
+
+  addSoftSkill = async (language, skill) => {
+    const url = this.#BASE_URL + '/admin/softSkills';
+
+    const response = await axios.post(
+      url,
+      { language: language.toUpperCase(), skill },
+      { headers: this.getHeaders() }
+    );
+    return response.data;
+  };
+
+  getSoftSkills = async lang => {
+    const url = this.#BASE_URL + `/admin/softSkills/${lang}?perPage=100`;
+    const response = await axios.get(url);
+
+    return response.data;
+  };
+  getSoftSkill = async (id, lang) => {
+    const url = this.#BASE_URL + `/admin/softSkills/${id}/${lang}`;
+
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  removeSoftSkill = async id => {
+    const url = this.#BASE_URL + `/admin/softSkills/${id}`;
+
+    const response = await axios.delete(url, { headers: this.getHeaders() });
+    if (response.status !== 204) {
+      throw new Error('did not delete');
+    }
+    return response;
   };
 }
