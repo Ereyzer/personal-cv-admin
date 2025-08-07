@@ -3,9 +3,11 @@ import { Form, Image, InputGroup } from 'react-bootstrap';
 import { isValidUrl } from '../../../utils/isValidUrl';
 import css from './hardSkills.module.css';
 import { myDebounce } from '../../../utils/debounce';
+
 const memofunk = myDebounce((onSave, saving) => {
   onSave(null, true, saving);
 }, 1000);
+
 function NewHardSkill({ onSave, saveSkill }) {
   const [imgSrc, setImgSrc] = useState('');
   const [showImg, setShowImg] = useState(false);

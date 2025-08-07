@@ -26,6 +26,8 @@ img {
 .inherit-colors {
   background-color: inherit;
   color: inherit;
+  fill: inherit;
+  stroke: inherit;
 }
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
