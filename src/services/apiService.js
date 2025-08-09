@@ -18,6 +18,8 @@ export class ApiService {
     this.removeHardSkill = this.autorizationHendler(this.removeHardSkill);
     this.addSoftSkill = this.autorizationHendler(this.addSoftSkill);
     this.removeSoftSkill = this.autorizationHendler(this.removeSoftSkill);
+    this.updateResume = this.autorizationHendler(this.updateResume);
+    this.deleteResume = this.autorizationHendler(this.deleteResume);
   }
 
   setLogoutContext = func => {
@@ -226,6 +228,50 @@ export class ApiService {
     const url = this.#BASE_URL + `/admin/softSkills/${id}`;
 
     const response = await axios.delete(url, { headers: this.getHeaders() });
+    if (response.status !== 204) {
+      throw new Error('did not delete');
+    }
+    return response;
+  };
+
+  getResume = async () => {
+    const url = this.#BASE_URL + '/admin/info/resume';
+    const response = await axios.get(url, { responseType: 'blob' });
+
+    const contentDisposition = response.headers['content-disposition'];
+    let originalFileName = 'default_filename.pdf';
+
+    if (contentDisposition) {
+      // Use a regular expression to extract the filename from the header value
+      const filenameMatch = contentDisposition.match(/filename="([^"]+)"/);
+      if (filenameMatch && filenameMatch[1]) {
+        originalFileName = filenameMatch[1];
+      }
+    }
+
+    const fileURL = URL.createObjectURL(response.data);
+    return { fileURL, originalFileName };
+  };
+
+  updateResume = async resume => {
+    const url = this.#BASE_URL + '/admin/info/resume';
+
+    const form = new FormData();
+    form.append('my_field', 'resume');
+    form.append('resume', resume);
+
+    const response = await axios.post(url, form, {
+      headers: this.getHeaders(),
+    });
+    return response.data;
+  };
+
+  deleteResume = async () => {
+    const url = this.#BASE_URL + '/admin/info/resume';
+
+    const response = await axios.delete(url, {
+      headers: this.getHeaders(),
+    });
     if (response.status !== 204) {
       throw new Error('did not delete');
     }

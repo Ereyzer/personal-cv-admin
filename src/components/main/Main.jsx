@@ -11,6 +11,7 @@ import LinksSection from './linksSection/LincsSection';
 import './main.css';
 import HardSkillsList from './hardSkils/HardSkilsList';
 import SoftSkillsList from './softSkills/SoftSkillsList';
+import Resume from './resume/Resume';
 function Main() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -41,6 +42,7 @@ function Main() {
       {!loading && (
         <>
           <AvatarSection imgUrl={data.avatar.cut} setImgUrl={patchData} />
+          <Resume />
           <LinksSection data={data} patchData={patchData} />
           <MultiLangugeItem patchData={patchData} data={data} title={'Intro'} Item={IntroItem} />
           <MultiLangugeItem patchData={patchData} data={data} title={'About'} Item={AboutItem} />
