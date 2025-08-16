@@ -20,6 +20,11 @@ export class ApiService {
     this.removeSoftSkill = this.autorizationHendler(this.removeSoftSkill);
     this.updateResume = this.autorizationHendler(this.updateResume);
     this.deleteResume = this.autorizationHendler(this.deleteResume);
+    this.updateProjectBase = this.autorizationHendler(this.updateProjectBase);
+    this.getHardSkillsByIds = this.autorizationHendler(this.getHardSkillsByIds);
+    this.updateProjectText = this.autorizationHendler(this.updateProjectText);
+    this.deleteProject = this.autorizationHendler(this.deleteProject);
+    this.addProject = this.autorizationHendler(this.addProject);
   }
 
   setLogoutContext = func => {
@@ -276,5 +281,45 @@ export class ApiService {
       throw new Error('did not delete');
     }
     return response;
+  };
+  getHardSkillsByIds = async id => {
+    const url = this.#BASE_URL + `/admin/hardSkills/ids?idArr=${JSON.stringify(id)}`;
+
+    const response = await axios.get(url);
+    return response.data;
+  };
+
+  getProjectList = async (language = 'en', perPage = 100, page = 1) => {
+    const url =
+      this.#BASE_URL +
+      `/admin/projects?language=${language.toUpperCase()}&perPage=${perPage}&page=${page}`;
+    const response = await axios.get(url);
+    return response.data;
+  };
+  updateProjectBase = async (formData, id) => {
+    const url = this.#BASE_URL + `/admin/projects/${id}`;
+    const response = await axios.patch(url, formData, { headers: this.getHeaders() });
+    return response.data;
+  };
+  updateProjectText = async (data, id) => {
+    const url = this.#BASE_URL + `/admin/projects/language/${id}`;
+    const response = await axios.patch(url, data, { headers: this.getHeaders() });
+    return response.data;
+  };
+  deleteProject = async id => {
+    const url = this.#BASE_URL + `/admin/projects/${id}`;
+
+    const response = await axios.delete(url, {
+      headers: this.getHeaders(),
+    });
+    if (response.status !== 204) {
+      throw new Error('did not delete');
+    }
+    return response;
+  };
+  addProject = async formData => {
+    const url = this.#BASE_URL + `/admin/projects`;
+    const response = await axios.post(url, formData, { headers: this.getHeaders() });
+    return response.data;
   };
 }

@@ -12,6 +12,7 @@ import './main.css';
 import HardSkillsList from './hardSkils/HardSkilsList';
 import SoftSkillsList from './softSkills/SoftSkillsList';
 import Resume from './resume/Resume';
+import Projects from './projects/Projects';
 function Main() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -48,6 +49,7 @@ function Main() {
           <MultiLangugeItem patchData={patchData} data={data} title={'About'} Item={AboutItem} />
           <HardSkillsList />
           <SoftSkillsList />
+          <Projects />
         </>
       )}
       {!loading && error && <p>error</p>}
