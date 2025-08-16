@@ -1,0 +1,30 @@
+.selectwidth {
+  width: 200px;
+  margin-bottom: 20px;
+}
+.selectposition {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.optionstyle {
+  background-color: var(--main-bg-color);
+}
+.cardbg {
+  background-color: rgb(65, 50, 50);
+}
+/* .cardwidth {
+  width: 290px;
+} */
+/* .crdhaight {
+  height: 290px;
+} */
+/* .cardmargyn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+} */
+
+/* .rowgap {
+  gap: 10px;
+} */
