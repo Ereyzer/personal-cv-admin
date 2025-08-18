@@ -25,6 +25,7 @@ export class ApiService {
     this.updateProjectText = this.autorizationHendler(this.updateProjectText);
     this.deleteProject = this.autorizationHendler(this.deleteProject);
     this.addProject = this.autorizationHendler(this.addProject);
+    this.getStat = this.autorizationHendler(this.getStat);
   }
 
   setLogoutContext = func => {
@@ -320,6 +321,13 @@ export class ApiService {
   addProject = async formData => {
     const url = this.#BASE_URL + `/admin/projects`;
     const response = await axios.post(url, formData, { headers: this.getHeaders() });
+    return response.data;
+  };
+  getStat = async () => {
+    const url = this.#BASE_URL + '/admin/statistics';
+
+    const response = await axios.get(url, { headers: this.getHeaders() });
+
     return response.data;
   };
 }
