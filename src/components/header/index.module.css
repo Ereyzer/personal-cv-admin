@@ -1,0 +1,9 @@
+.nav-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  a {
+    display: block;
+    font-size: 20px;
+  }
+}
