@@ -63,7 +63,6 @@ function Projects() {
         <ListGroup.Item className="inherit-colors">
           <Row xs={1} md={3}>
             {list.map(item => {
-              console.log(item);
               return (
                 <ProjectCard
                   key={item._id}

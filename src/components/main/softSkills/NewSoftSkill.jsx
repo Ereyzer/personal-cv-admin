@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react';
+import { useCallback, useId, useMemo, useState } from 'react';
 import { myDebounce } from '../../../utils/debounce';
 import { Form } from 'react-bootstrap';
 
@@ -9,14 +9,17 @@ const memofunk = myDebounce((onSave, saving) => {
 function NewSoftSkill({ onSave, saveSkill }) {
   const textId = useId();
   const titleId = useId();
-  const [text, setText] = useState();
-  const [title, setTitle] = useState();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useMemo(() => memofunk(onSave, saving), [text, title]);
+  const [text, setText] = useState('');
+  const [title, setTitle] = useState('');
 
-  function saving() {
-    saveSkill({ text, title });
-  }
+  const saving = useCallback(
+    function () {
+      saveSkill({ text, title });
+    },
+    [text, title, saveSkill]
+  );
+  useMemo(() => memofunk(onSave, saving), [onSave, saving]);
+
   return (
     <>
       <Form.Label htmlFor={titleId}>Title</Form.Label>
