@@ -332,7 +332,7 @@ export class ApiService {
     return response.data;
   };
   updatePassword = async () => {
-    const url = this.#BASE_URL + '/auth/update-password';
+    const url = this.#BASE_URL + '/auth/new-password';
 
     const response = await axios.get(url, { headers: this.getHeaders() });
     return response.data;
