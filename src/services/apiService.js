@@ -26,6 +26,7 @@ export class ApiService {
     this.deleteProject = this.autorizationHendler(this.deleteProject);
     this.addProject = this.autorizationHendler(this.addProject);
     this.getStat = this.autorizationHendler(this.getStat);
+    this.updatePassword = this.autorizationHendler(this.updatePassword);
   }
 
   setLogoutContext = func => {
@@ -328,6 +329,12 @@ export class ApiService {
 
     const response = await axios.get(url, { headers: this.getHeaders() });
 
+    return response.data;
+  };
+  updatePassword = async () => {
+    const url = this.#BASE_URL + '/auth/update-password';
+
+    const response = await axios.get(url, { headers: this.getHeaders() });
     return response.data;
   };
 }
