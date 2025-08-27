@@ -67,8 +67,6 @@ function SoftSkillsList() {
 
   const saveSkill = async skill => {
     const { data } = await apiService.addSoftSkill(lang, skill);
-    console.log(data);
-
     updateList(data);
     closeModal();
   };
