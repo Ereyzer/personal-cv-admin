@@ -13,6 +13,7 @@ import HardSkillsList from './hardSkils/HardSkilsList';
 import SoftSkillsList from './softSkills/SoftSkillsList';
 import Resume from './resume/Resume';
 import Projects from './projects/Projects';
+import NewPassword from './newPassword/NewPassword';
 function Main() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,7 @@ function Main() {
       {loading && <MyLoader />}
       {!loading && (
         <>
+          <NewPassword></NewPassword>
           <AvatarSection imgUrl={data.avatar.cut} setImgUrl={patchData} />
           <Resume />
           <LinksSection data={data} patchData={patchData} />
