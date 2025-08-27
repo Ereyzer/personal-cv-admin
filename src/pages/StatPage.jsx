@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom';
 import { useUser } from '../components/context/user/userContext';
 import Footer from '../components/footer/Footer';
 import Header from '../components/header/Header';
